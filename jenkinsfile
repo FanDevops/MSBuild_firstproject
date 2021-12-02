@@ -1,0 +1,26 @@
+pipeline{
+    agent any
+    environment {
+        PATH = "$PATH:/usr/share/maven/bin"
+    }
+    stages{
+       stage('GetCode'){
+            steps{
+                git 'https://github.com/FanDevops/MSBuild_firstproject.git'
+            }
+         }        
+       stage('Build'){
+            steps{
+                sh 'mvn clean verify'
+            }
+         }
+        stage('SonarQube analysis') {
+        steps{
+        withSonarQubeEnv('Sonarqube') { 
+        sh "mvn sonar:sonar"
+    }
+        }
+        }
+       
+    }
+}
